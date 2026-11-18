@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BusanaQu Posting — Demo</title>
+<style>
+  body{font-family:system-ui,Arial,sans-serif;margin:0;background:#f6f7f9;color:#111}
+  header{background:#0b5ed7;color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+  header b{font-size:19px}
+  .badge{background:#ffc107;color:#111;border-radius:10px;padding:2px 9px;font-size:12px;font-weight:700}
+  main{max-width:520px;margin:0 auto;padding:18px}
+  .card{background:#fff;border:1px solid #e3e6ea;border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  button{border:0;border-radius:10px;padding:12px 18px;font-size:16px;font-weight:700;cursor:pointer;width:100%}
+  .tt{background:#111;color:#fff}
+  .primary{background:#0b5ed7;color:#fff}
+  .ghost{background:#eef1f4;color:#111}
+  button:disabled{opacity:.55}
+  .acct{display:flex;gap:12px;align-items:center}
+  .ava{width:52px;height:52px;border-radius:50%;background:#0b5ed7;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px}
+  .vids{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .vid{border:3px solid transparent;border-radius:12px;padding:10px;background:#eef4ff;cursor:pointer;text-align:center}
+  .vid.sel{border-color:#0b5ed7;background:#dbe9ff}
+  .vid .thumb{font-size:34px}
+  textarea{width:100%;box-sizing:border-box;border:1px solid #ccd2d9;border-radius:10px;padding:10px;font-size:15px;min-height:74px}
+  .row{display:flex;gap:10px}
+  .hidden{display:none}
+  .ok{background:#e7f7ee;border-color:#bfe8cf}
+  .big{font-size:44px;text-align:center}
+  .muted{color:#667;font-size:13px}
+  progress{width:100%;height:14px}
+  h2{margin:4px 0 10px;font-size:18px}
+</style>
+</head>
+<body>
+<header><b>BusanaQu Posting</b><span class="badge">SANDBOX DEMO</span></header>
+<main>
+
+  <section id="s1" class="card">
+    <h2>1. Sign in with TikTok</h2>
+    <p>Connect the shop's own TikTok account. BusanaQu Posting reads only your basic profile (<i>user.info.basic</i>) to show which account is connected.</p>
+    <button class="tt" onclick="authorize()">Sign in with TikTok</button>
+    <p class="muted">Demo mode: no real password is asked or sent anywhere.</p>
+  </section>
+
+  <section id="s1b" class="card hidden">
+    <h2>TikTok — Authorize</h2>
+    <p><b>BusanaQu Posting</b> is requesting access to:</p>
+    <p>&#10004; View your basic profile info (user.info.basic)<br>&#10004; Upload videos to your account (video.upload)<br>&#10004; Publish videos to your account (video.publish)</p>
+    <div class="row">
+      <button class="ghost" onclick="show(1)">Cancel</button>
+      <button class="primary" onclick="show(2)">Authorize</button>
+    </div>
+  </section>
+
+  <section id="s2" class="card hidden">
+    <h2>2. Connected account</h2>
+    <div class="acct">
+      <div class="ava">BQ</div>
+      <div><b>@bintangfashion180</b><br><span class="muted">Bintang Fashion — shop owner account</span></div>
+    </div>
+    <p class="muted">Only this account can post. You can disconnect at any time from TikTok Settings.</p>
+    <button class="primary" onclick="show(3)">Continue</button>
+  </section>
+
+  <section id="s3" class="card hidden">
+    <h2>3. Choose a product video</h2>
+    <div class="vids">
+      <div class="vid" id="v1" onclick="pick(1)"><div class="thumb">&#128087;</div>Gamis Syari — Blue<br><span class="muted">VID_0101.mp4</span></div>
+      <div class="vid" id="v2" onclick="pick(2)"><div class="thumb">&#129507;</div>Hijab Voal Premium<br><span class="muted">VID_0102.mp4</span></div>
+      <div class="vid" id="v3" onclick="pick(3)"><div class="thumb">&#128090;</div>Blouse Batik Modern<br><span class="muted">VID_0103.mp4</span></div>
+      <div class="vid" id="v4" onclick="pick(4)"><div class="thumb">&#128086;</div>Kulot Linen Wanita<br><span class="muted">VID_0104.mp4</span></div>
+    </div>
+    <p></p>
+    <button class="primary" id="pickBtn" disabled onclick="toCaption()">Continue</button>
+  </section>
+
+  <section id="s4" class="card hidden">
+    <h2>4. Write the caption</h2>
+    <textarea id="cap">Gamis Syari terbaru sudah ready! Bahan adem, jatuhnya cantik. Klik keranjang kuning buat order ya kak #BusanaQu #GamisSyari #TikTokShop</textarea>
+    <p class="muted">Product: <b id="prodName">—</b></p>
+    <button class="primary" onclick="review()">Review before posting</button>
+  </section>
+
+  <section id="s5" class="card hidden">
+    <h2>5. Review &amp; confirm</h2>
+    <p>Posting to: <b>@bintangfashion180</b></p>
+    <p>Product video: <b id="revProd">—</b></p>
+    <p>Caption:</p>
+    <p id="revCap" style="background:#f2f4f7;border-radius:10px;padding:10px"></p>
+    <p class="muted">Nothing is posted until you press Post. You stay in control of your own account.</p>
+    <div class="row">
+      <button class="ghost" onclick="show(4)">Back</button>
+      <button class="primary" onclick="post()">Post to TikTok</button>
+    </div>
+  </section>
+
+  <section id="s6" class="card hidden">
+    <h2>Posting…</h2>
+    <progress id="bar" value="0" max="100"></progress>
+    <p class="muted" id="barTxt">Uploading video (video.upload)…</p>
+  </section>
+
+  <section id="s7" class="card ok hidden">
+    <div class="big">&#9989;</div>
+    <h2 style="text-align:center">Posted successfully!</h2>
+    <p style="text-align:center">Your product video is now published on <b>@bintangfashion180</b> via the Content Posting API (video.publish).</p>
+    <button class="primary" onclick="location.reload()">Post another video</button>
+  </section>
+
+</main>
+<script>
+  var product = "";
+  var names = {1:"Gamis Syari — Blue (VID_0101.mp4)",2:"Hijab Voal Premium (VID_0102.mp4)",3:"Blouse Batik Modern (VID_0103.mp4)",4:"Kulot Linen Wanita (VID_0104.mp4)"};
+  function show(n){ [1,2,3,4,5,6,7].forEach(function(i){ document.getElementById("s"+i).classList.add("hidden"); });
+    document.getElementById("s1b").classList.add("hidden");
+    document.getElementById("s"+n).classList.remove("hidden"); window.scrollTo(0,0); }
+  function authorize(){ document.getElementById("s1").classList.add("hidden"); document.getElementById("s1b").classList.remove("hidden"); window.scrollTo(0,0); }
+  function pick(n){ product = names[n]; [1,2,3,4].forEach(function(i){ document.getElementById("v"+i).classList.remove("sel"); });
+    document.getElementById("v"+n).classList.add("sel"); document.getElementById("pickBtn").disabled = false; }
+  function toCaption(){ document.getElementById("prodName").textContent = product; show(4); }
+  function review(){ document.getElementById("revProd").textContent = product;
+    document.getElementById("revCap").textContent = document.getElementById("cap").value; show(5); }
+  function post(){ show(6); var v = 0; var bar = document.getElementById("bar"); var txt = document.getElementById("barTxt");
+    var t = setInterval(function(){ v += 10; bar.value = v;
+      if(v === 50){ txt.textContent = "Publishing to your TikTok account (video.publish)…"; }
+      if(v >= 100){ clearInterval(t); show(7); } }, 350); }
+</script>
+</body>
+</html>
